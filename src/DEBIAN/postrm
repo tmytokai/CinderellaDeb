@@ -1,0 +1,19 @@
+#!/bin/sh
+
+set -eu
+
+INSTALLDIR="/opt/cinderella"
+BINDIR="/usr/bin"
+
+rm -rf "$INSTALLDIR"
+
+rm -f /usr/share/icons/hicolor/scalable/apps/cinderella.svg
+
+sudo gtk-update-icon-cache -f -t /usr/share/icons/hicolor 2> /dev/null
+sudo update-mime-database /usr/share/mime
+sudo update-desktop-database /usr/share/applications
+
+cd "$BINDIR"
+rm -f cinderella
+
+exit 0

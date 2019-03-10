@@ -1,0 +1,8 @@
+Package: cinderella
+Version: 2.9.0ubuntu1.0
+Architecture: amd64
+Maintainer: Tomoya Tokairin <tmytokai[at]yahoo.co.jp>
+Depends: wget, imagemagick, openjdk-8-jre
+Homepage: https://cinderella.de/tiki-index.php
+Description: Cinderella.2
+ The Interactive Geometry Software

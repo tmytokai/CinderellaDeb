@@ -1,0 +1,55 @@
+--- Cinderella2	2017-06-24 19:33:02.000000000 +0900
++++ Cinderella2_ubuntu	2019-03-10 16:48:49.202227648 +0900
+@@ -208,6 +208,16 @@
+   fi
+ }
+ 
++test_ubuntu() {
++  path_lsb_release=`which lsb_release 2> /dev/null`
++  if [ -x "$path_lsb_release" ]; then
++    os_distributor=`$path_lsb_release -si 2> /dev/null`
++    if [ "$os_distributor" = "Ubuntu" ]; then
++      test_jvm /usr/lib/jvm/java-8-openjdk-amd64/jre
++    fi
++  fi
++}
++
+ old_pwd=`pwd`
+ 
+ progname=`basename "$0"`
+@@ -250,6 +260,10 @@
+ fi
+ 
+ if [ -z "$app_java_home" ]; then
++  test_ubuntu
++fi
++
++if [ -z "$app_java_home" ]; then
+ if [ -f "$app_home/.install4j/pref_jre.cfg" ]; then
+     read file_jvm_home < "$app_home/.install4j/pref_jre.cfg"
+     test_jvm "$file_jvm_home"
+@@ -355,6 +369,24 @@
+   vmov_5="-Di4j.vmov=true"
+ fi
+ 
++path_readlink=`which readlink 2> /dev/null`
++if [ -x "$path_readlink" ]; then
++  size_arg=$#
++  old_pwdfullpath=`pwd`
++  cd "$old_pwd"
++  for arg in "$@"
++  do
++    if [ -f "$arg" ]; then
++      fullpath=`readlink -f "$arg"`
++      set "$@" "$fullpath"
++    else
++      set "$@" "$arg"
++    fi
++  done
++  shift $size_arg
++  cd $old_pwdfullpath
++fi
++
+ "$app_java_home/bin/java" -Dinstall4j.jvmDir="$app_java_home" -Dexe4j.moduleName="$prg_dir/$progname" "-Xmx512m" "-Dapple.laf.useScreenMenuBar=true" "-Dapple.awt.graphics.UseQuartz=true" "$vmov_1" "$vmov_2" "$vmov_3" "$vmov_4" "$vmov_5" $INSTALL4J_ADD_VM_PARAMS -classpath "$local_classpath" com.install4j.runtime.Launcher launch de.cinderella.Cindy true false "$prg_dir/error.log" "$prg_dir/output.log" true true true "s_185bsl9.png" true true 322 200 "Loading Cinderella..." 20 162 "Arial" "0,0,0" 10 500 "version 2.8" 20 58 "Arial" "0,0,0" 10 500 -1  "$@"
+ 
+ 

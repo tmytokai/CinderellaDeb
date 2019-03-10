@@ -1,0 +1,56 @@
+#!/bin/sh 
+
+set -eu
+
+INSTALLDIR="/opt/cinderella"
+BINDIR="/usr/bin"
+
+ARCHIVE="Cinderella_unix_2_8.tar.gz"
+ARCHIVEURL="https://beta.cinderella.de/$ARCHIVE"
+MD5SUM="baa978546e5ac4a650ae186a62fa182f"
+CACHEDIR="/var/cache/cinderella"
+
+exit_error() {
+    echo $1
+    exit 1
+}
+
+check_md5sum() {
+    if [ ! -f "$ARCHIVE" ]; then
+	return 1;
+    fi
+    if [ `md5sum "$ARCHIVE" | awk '{printf("%s",$1)}'` != "$MD5SUM" ]; then
+	echo "Invalid MD5SUM"
+	rm "$ARCHIVE"
+	return 1
+    fi
+    return 0
+}
+
+if [ ! -d "$CACHEDIR" ]; then
+    mkdir -p "$CACHEDIR"
+fi
+cd "$CACHEDIR"
+
+check_md5sum || wget "$ARCHIVEURL"
+check_md5sum || exit_error "download failed"
+
+echo "installing cinderella..."
+tar xvfz "$ARCHIVE" --directory "$INSTALLDIR" --strip-components 1 1> /dev/null
+
+cd "$INSTALLDIR"
+patch Cinderella2 Cinderella2.patch 1> /dev/null
+
+cd .install4j
+convert i4j_extf_19_1sihid8_ckt8gn.ico /usr/share/icons/hicolor/scalable/apps/cinderella.svg
+
+sudo gtk-update-icon-cache -f -t /usr/share/icons/hicolor 2> /dev/null
+sudo update-mime-database /usr/share/mime
+sudo update-desktop-database /usr/share/applications
+
+cd "$BINDIR"
+ln -sf "$INSTALLDIR/Cinderella2" cinderella
+
+echo "done"
+
+exit 0

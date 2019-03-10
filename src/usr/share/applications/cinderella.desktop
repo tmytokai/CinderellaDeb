@@ -1,0 +1,11 @@
+[Desktop Entry]
+Version=2.9
+Type=Application
+Name=Cinderella2
+Comment=The Interactive Geometry Software
+Exec=cinderella %f
+Icon=cinderella
+Terminal=false
+Categories=Education;
+StartupWMClass=com-install4j-runtime-Launcher
+MimeType=application/x-cdy;
