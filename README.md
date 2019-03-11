@@ -21,3 +21,10 @@ Then,
 # Uninstallation
 
     $ sudo dpkg -r cinderella
+
+# Build
+
+    $ git clone https://github.com/tmytokai/CinderellaDeb.git
+    $ cd CinderellaDeb
+    $ find . -name "*~" -exec rm -f \{\} \;
+    $ fakeroot dpkg-deb --build src .
